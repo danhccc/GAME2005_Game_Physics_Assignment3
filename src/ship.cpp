@@ -4,23 +4,18 @@
 #include "TextureManager.h"
 #include "Util.h"
 
-Ship::Ship() : m_maxSpeed(10.0f)
+Ship::Ship()
 {
-	TextureManager::Instance()->load("../Assets/textures/ship3.png","ship");
+	TextureManager::Instance()->load("../Assets/textures/Circle.png", "ball");
 
-	auto size = TextureManager::Instance()->getTextureSize("ship");
+	const auto size = TextureManager::Instance()->getTextureSize("ball");
 	setWidth(size.x);
 	setHeight(size.y);
-
 	getTransform()->position = glm::vec2(400.0f, 300.0f);
-	getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
-	getRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
+	getRigidBody()->velocity = glm::vec2(20, 50);
 	getRigidBody()->isColliding = false;
+
 	setType(SHIP);
-	
-	m_currentHeading = 0.0f; // current facing angle
-	m_currentDirection = glm::vec2(1.0f, 0.0f); // facing right
-	m_turnRate = 5.0f; // 5 degrees per frame
 }
 
 
@@ -34,7 +29,7 @@ void Ship::draw()
 	const auto y = getTransform()->position.y;
 
 	// draw the ship
-	TextureManager::Instance()->draw("ship", x, y, m_currentHeading, 255, true);
+	TextureManager::Instance()->draw("ball", x, y, 0, 255, true);
 }
 
 
@@ -48,97 +43,101 @@ void Ship::clean()
 {
 }
 
-void Ship::turnRight()
-{
-	m_currentHeading += m_turnRate;
-	if (m_currentHeading >= 360) 
-	{
-		m_currentHeading -= 360.0f;
-	}
-	m_changeDirection();
-}
-
-void Ship::turnLeft()
-{
-	m_currentHeading -= m_turnRate;
-	if (m_currentHeading < 0)
-	{
-		m_currentHeading += 360.0f;
-	}
-
-	m_changeDirection();
-}
-
-void Ship::moveForward()
-{
-	getRigidBody()->velocity = m_currentDirection * m_maxSpeed;
-}
-
-void Ship::moveBack()
-{
-	getRigidBody()->velocity = m_currentDirection * -m_maxSpeed;
-}
+//void Ship::turnRight()
+//{
+//	m_currentHeading += m_turnRate;
+//	if (m_currentHeading >= 360) 
+//	{
+//		m_currentHeading -= 360.0f;
+//	}
+//	m_changeDirection();
+//}
+//
+//void Ship::turnLeft()
+//{
+//	m_currentHeading -= m_turnRate;
+//	if (m_currentHeading < 0)
+//	{
+//		m_currentHeading += 360.0f;
+//	}
+//
+//	m_changeDirection();
+//}
+//
+//void Ship::moveForward()
+//{
+//	getRigidBody()->velocity = m_currentDirection * m_maxSpeed;
+//}
+//
+//void Ship::moveBack()
+//{
+//	getRigidBody()->velocity = m_currentDirection * -m_maxSpeed;
+//}
 
 void Ship::move()
 {
 	getTransform()->position += getRigidBody()->velocity;
-	getRigidBody()->velocity *= 0.9f;
+	getRigidBody()->velocity *= 0.99f;
 }
 
-glm::vec2 Ship::getTargetPosition() const
-{
-	return m_targetPosition;
-}
-
-glm::vec2 Ship::getCurrentDirection() const
-{
-	return m_currentDirection;
-}
-
-float Ship::getMaxSpeed() const
-{
-	return m_maxSpeed;
-}
-
-void Ship::setTargetPosition(glm::vec2 newPosition)
-{
-	m_targetPosition = newPosition;
-
-}
-
-void Ship::setCurrentDirection(glm::vec2 newDirection)
-{
-	m_currentDirection = newDirection;
-}
-
-void Ship::setMaxSpeed(float newSpeed)
-{
-	m_maxSpeed = newSpeed;
-}
+//glm::vec2 Ship::getTargetPosition() const
+//{
+//	return m_targetPosition;
+//}
+//
+//glm::vec2 Ship::getCurrentDirection() const
+//{
+//	return m_currentDirection;
+//}
+//
+//float Ship::getMaxSpeed() const
+//{
+//	return m_maxSpeed;
+//}
+//
+//void Ship::setTargetPosition(glm::vec2 newPosition)
+//{
+//	m_targetPosition = newPosition;
+//
+//}
+//
+//void Ship::setCurrentDirection(glm::vec2 newDirection)
+//{
+//	m_currentDirection = newDirection;
+//}
+//
+//void Ship::setMaxSpeed(float newSpeed)
+//{
+//	m_maxSpeed = newSpeed;
+//}
 
 
 
 void Ship::m_checkBounds()
 {
 
-	if (getTransform()->position.x > Config::SCREEN_WIDTH)
+	if (getTransform()->position.x > Config::SCREEN_WIDTH - 20)
 	{
-		getTransform()->position = glm::vec2(0.0f, getTransform()->position.y);
+		getRigidBody()->velocity.x = -(getRigidBody()->velocity.x);
+		//getTransform()->position = glm::vec2(20.0f, getTransform()->position.y);
 	}
 
-	if (getTransform()->position.x < 0)
+	if (getTransform()->position.x < 20)
 	{
-		getTransform()->position = glm::vec2(800.0f, getTransform()->position.y);
+		getRigidBody()->velocity.x = -(getRigidBody()->velocity.x);
+		//getTransform()->position = glm::vec2(800.0f, getTransform()->position.y);
 	}
 
-	if (getTransform()->position.y > Config::SCREEN_HEIGHT)
+	if (getTransform()->position.y > Config::SCREEN_HEIGHT - 20)
 	{
-		getTransform()->position = glm::vec2(getTransform()->position.x, 0.0f);
+		getRigidBody()->velocity.y = -(getRigidBody()->velocity.y);
+		//getTransform()->position = glm::vec2(getTransform()->position.x, 20.0f);
 	}
 
-	if (getTransform()->position.y < 0)
+	if (getTransform()->position.y < 20)
 	{
-		getTransform()->position = glm::vec2(getTransform()->position.x, 600.0f);
+		getRigidBody()->velocity.y = -(getRigidBody()->velocity.y);
+		//getTransform()->position = glm::vec2(getTransform()->position.x, 600.0f);
 	}
 
 }

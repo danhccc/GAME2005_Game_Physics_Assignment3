@@ -16,10 +16,10 @@ public:
 	void update() override;
 	void clean() override;
 
-	void turnRight();
-	void turnLeft();
-	void moveForward();
-	void moveBack();
+	//void turnRight();
+	//void turnLeft();
+	//void moveForward();
+	//void moveBack();
 	
 	void move();
 

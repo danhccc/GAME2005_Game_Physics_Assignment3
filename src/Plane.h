@@ -25,7 +25,7 @@ public:
 
 	bool isColliding(GameObject* pOther);
 	std::string checkDistance(GameObject* pGameObject);
-
+	std::string magnitude;
 	bool checkCollision(GameObject* oObject);
 
 private:

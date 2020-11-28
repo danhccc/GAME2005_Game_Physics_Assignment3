@@ -66,9 +66,13 @@ void StartScene::start()
 	m_pInstructionsLabel->setParent(this);
 	addChild(m_pInstructionsLabel);
 
+	m_pImguiTipLabel = new Label("Press the backtick (`) character to toggle Debug View in each Scene", "Consolas", 20, white, glm::vec2(400.0f, 450.0f));
+	m_pImguiTipLabel->setParent(this);
+	addChild(m_pImguiTipLabel);
+
 	// Scene 1 button
 	m_pScene1 = new Button("../Assets/textures/scene1button.png","scene1button",SCENE1_BUTTON);
-	m_pScene1->getTransform()->position = glm::vec2(300.0f, 450.0f);
+	m_pScene1->getTransform()->position = glm::vec2(300.0f, 400.0f);
 
 	m_pScene1->addEventListener(CLICK, [&]()-> void
 		{
@@ -89,7 +93,7 @@ void StartScene::start()
 
 	// Scene 2 button
 	m_pScene2 = new Button("../Assets/textures/scene2button.png", "scene2button", SCENE2_BUTTON);
-	m_pScene2->getTransform()->position = glm::vec2(500.0f, 450.0f);
+	m_pScene2->getTransform()->position = glm::vec2(500.0f, 400.0f);
 
 	m_pScene2->addEventListener(CLICK, [&]()-> void
 		{

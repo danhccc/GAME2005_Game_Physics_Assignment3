@@ -1,7 +1,6 @@
 #include "Target.h"
 #include "TextureManager.h"
 
-
 Target::Target()
 {
 	TextureManager::Instance()->load("../Assets/textures/bullet.png","bullet");

@@ -3,6 +3,8 @@
 #include "EventManager.h"
 #include <vector>
 #include "CollisionManager.h"
+#include "Util.h"
+#include "Plane.h"
 using namespace std;
 
 // required for IMGUI
@@ -23,13 +25,12 @@ PlayScene::~PlayScene()
 void PlayScene::draw()
 {
 	TextureManager::Instance()->draw("Scene1BG", 400, 300, 0, 225, true);
+	drawDisplayList();
+	SDL_SetRenderDrawColor(Renderer::Instance()->getRenderer(), 255, 255, 255, 255);
 	if(EventManager::Instance().isIMGUIActive())
 	{
 		GUI_Function();
 	}
-
-	drawDisplayList();
-	SDL_SetRenderDrawColor(Renderer::Instance()->getRenderer(), 255, 255, 255, 255);
 }
 
 void PlayScene::update()
@@ -119,6 +120,8 @@ void PlayScene::start()
 	TextureManager::Instance()->load("../Assets/textures/A3_S1BG.jpg", "Scene1BG");
 	SoundManager::Instance().load("../Assets/audio/explosion.wav", "boom", SOUND_SFX);
 
+
+
 	// Set GUI Title
 	m_guiTitle = "Play Scene";
 	
@@ -145,7 +148,7 @@ void PlayScene::start()
 
 	// Back Button
 	m_pBackButton = new Button("../Assets/textures/backButton.png", "backButton", BACK_BUTTON);
-	m_pBackButton->getTransform()->position = glm::vec2(300.0f, 400.0f);
+	m_pBackButton->getTransform()->position = glm::vec2(75.0f, 575.0f);
 	m_pBackButton->addEventListener(CLICK, [&]()-> void
 	{
 		m_pBackButton->setActive(false);
@@ -162,33 +165,6 @@ void PlayScene::start()
 		m_pBackButton->setAlpha(255);
 	});
 	addChild(m_pBackButton);
-
-	// Next Button
-	m_pNextButton = new Button("../Assets/textures/nextButton.png", "nextButton", NEXT_BUTTON);
-	m_pNextButton->getTransform()->position = glm::vec2(500.0f, 400.0f);
-	m_pNextButton->addEventListener(CLICK, [&]()-> void
-	{
-		m_pNextButton->setActive(false);
-		TheGame::Instance()->changeSceneState(END_SCENE);
-	});
-
-	m_pNextButton->addEventListener(MOUSE_OVER, [&]()->void
-	{
-		m_pNextButton->setAlpha(128);
-	});
-
-	m_pNextButton->addEventListener(MOUSE_OUT, [&]()->void
-	{
-		m_pNextButton->setAlpha(255);
-	});
-
-	addChild(m_pNextButton);
-
-	/* Instructions Label */
-	m_pInstructionsLabel = new Label("Press the backtick (`) character to toggle Debug View", "Consolas");
-	m_pInstructionsLabel->getTransform()->position = glm::vec2(Config::SCREEN_WIDTH * 0.5f, 500.0f);
-
-	addChild(m_pInstructionsLabel);
 }
 
 void PlayScene::GUI_Function() const
@@ -208,15 +184,9 @@ void PlayScene::GUI_Function() const
 
 	ImGui::Separator();
 
-	static float float3[3] = { 0.0f, 1.0f, 1.5f };
-	if(ImGui::SliderFloat3("My Slider", float3, 0.0f, 2.0f))
-	{
-		std::cout << float3[0] << std::endl;
-		std::cout << float3[1] << std::endl;
-		std::cout << float3[2] << std::endl;
-		std::cout << "---------------------------\n";
-	}
-	
+	//ImGui::Value("Plane magnitude: ", m_pPlaneSprite->magnitude);
+	ImGui::Value("Object pool size: ", m_pPool->all.size());
+
 	ImGui::End();
 
 	// Don't Remove this

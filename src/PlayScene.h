@@ -4,7 +4,6 @@
 
 #include "Scene.h"
 #include "Plane.h"
-#include "Player.h"
 #include "Target.h"
 #include "Button.h"
 #include "Label.h"
@@ -27,12 +26,12 @@ private:
 	void GUI_Function() const;
 	std::string m_guiTitle;
 	glm::vec2 m_mousePosition;
+
 	const float bulletSpawnTimeDuration = 400.0f;
 	float bulletSpawnTimerStart;
 	BulletPool* m_pPool;
 
 	Plane* m_pPlaneSprite;
-	Player* m_pPlayer;
 	Target* m_pTarget;
 	bool m_playerFacingRight;
 

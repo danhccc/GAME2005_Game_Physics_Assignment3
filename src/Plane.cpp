@@ -67,6 +67,8 @@ void Plane::update()
 	pos.y += getRigidBody()->velocity.y * deltaTime;
 
 	getTransform()->position = pos;
+
+	magnitude = std::to_string(Util::magnitude(getRigidBody()->velocity));
 }
 
 void Plane::clean()
