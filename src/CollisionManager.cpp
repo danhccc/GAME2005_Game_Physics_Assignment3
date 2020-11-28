@@ -29,7 +29,8 @@ bool CollisionManager::squaredRadiusCheck(GameObject* object1, GameObject* objec
 			switch (object2->getType()) {
 			case TARGET:
 				std::cout << "Collision with Target!" << std::endl;
-				SoundManager::Instance().playSound("yay", 0);
+				//SoundManager::Instance().load("../Assets/audio/yay.ogg", "yay", SOUND_SFX);
+				//SoundManager::Instance().playSound("yay", 0);
 
 				
 				break;

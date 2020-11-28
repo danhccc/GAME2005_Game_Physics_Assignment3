@@ -1,6 +1,9 @@
 #include "PlayScene.h"
 #include "Game.h"
 #include "EventManager.h"
+#include <vector>
+#include "CollisionManager.h"
+using namespace std;
 
 // required for IMGUI
 #include "imgui.h"
@@ -10,6 +13,8 @@
 PlayScene::PlayScene()
 {
 	PlayScene::start();
+
+	//m_pPool = new BulletPool(10);
 }
 
 PlayScene::~PlayScene()
@@ -17,6 +22,7 @@ PlayScene::~PlayScene()
 
 void PlayScene::draw()
 {
+	TextureManager::Instance()->draw("Scene1BG", 400, 300, 0, 225, true);
 	if(EventManager::Instance().isIMGUIActive())
 	{
 		GUI_Function();
@@ -29,6 +35,25 @@ void PlayScene::draw()
 void PlayScene::update()
 {
 	updateDisplayList();
+	if (SDL_GetTicks() - bulletSpawnTimerStart >= bulletSpawnTimeDuration)
+	{
+		SpawnBullet();
+	}
+	vector<Target*>& activeBullets = m_pPool->all;
+	for (vector<Target*>::iterator myiter = activeBullets.begin(); myiter != activeBullets.end(); myiter++)
+	{
+		Target* bullet = *myiter;
+		if (bullet->active && bullet->getTransform()->position.y >= 600)
+		{
+			m_pPool->Despawn(*myiter);
+			break;
+		}
+		if (m_pPlaneSprite->checkCollision(bullet))
+		{
+			cout << "Plane hit!" << endl;
+			SoundManager::Instance().playSound("boom", 0);
+		}
+	}
 }
 
 void PlayScene::clean()
@@ -91,12 +116,27 @@ void PlayScene::handleEvents()
 
 void PlayScene::start()
 {
+	TextureManager::Instance()->load("../Assets/textures/A3_S1BG.jpg", "Scene1BG");
+	SoundManager::Instance().load("../Assets/audio/explosion.wav", "boom", SOUND_SFX);
+
 	// Set GUI Title
 	m_guiTitle = "Play Scene";
 	
 	// Plane Sprite
 	m_pPlaneSprite = new Plane();
 	addChild(m_pPlaneSprite);
+
+	// Target Sprite
+	m_pTarget = new Target();
+	addChild(m_pTarget);
+
+	m_pPool = new BulletPool(10);
+	for (vector<Target*>::iterator myiter = m_pPool->all.begin(); myiter != m_pPool->all.end(); myiter++)
+	{
+		Target* bullet = *myiter;
+		addChild(bullet);
+	}
+	bulletSpawnTimerStart = SDL_GetTicks();
 
 	// Player Sprite
 	//m_pPlayer = new Player();
@@ -183,4 +223,14 @@ void PlayScene::GUI_Function() const
 	ImGui::Render();
 	ImGuiSDL::Render(ImGui::GetDrawData());
 	ImGui::StyleColorsDark();
+}
+
+void PlayScene::SpawnBullet()
+{
+	Target* bullet = m_pPool->Spawn();
+	if (bullet) {
+		//addChild(bullet);
+		bullet->getTransform()->position = glm::vec2(50 + rand() % 700, 0);
+	}
+	bulletSpawnTimerStart = SDL_GetTicks() - 2;
 }

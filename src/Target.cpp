@@ -4,9 +4,9 @@
 
 Target::Target()
 {
-	TextureManager::Instance()->load("../Assets/textures/Circle.png","circle");
+	TextureManager::Instance()->load("../Assets/textures/bullet.png","bullet");
 
-	const auto size = TextureManager::Instance()->getTextureSize("circle");
+	const auto size = TextureManager::Instance()->getTextureSize("bullet");
 	setWidth(size.x);
 	setHeight(size.y);
 	getTransform()->position = glm::vec2(100.0f, 100.0f);
@@ -26,7 +26,7 @@ void Target::draw()
 	const auto y = getTransform()->position.y;
 
 	// draw the target
-	TextureManager::Instance()->draw("circle", x, y, 0, 255, true);
+	TextureManager::Instance()->draw("bullet", x, y, 0, 255, true);
 }
 
 void Target::update()
@@ -41,13 +41,23 @@ void Target::clean()
 
 void Target::m_move()
 {
-	getTransform()->position = getTransform()->position + getRigidBody()->velocity * 5.0f;
+	float deltaTime = 1.0f / 30.0f;
+	glm::vec2 gravity = glm::vec2(0, 9.8f);
+
+	getRigidBody()->velocity += (getRigidBody()->acceleration + gravity) * deltaTime;
+
+	//if (!isGravityEnabled) getRigidBody()->velocity.y = 0;
+
+	getTransform()->position += getRigidBody()->velocity * deltaTime;
 }
 
 void Target::m_checkBounds()
 {
 }
 
-void Target::m_reset()
+void Target::Reset()
 {
+	getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
+	getRigidBody()->acceleration = glm::vec2(0.0f, 9.8f);
+	getRigidBody()->isColliding = false;
 }

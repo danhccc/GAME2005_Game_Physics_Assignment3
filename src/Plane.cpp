@@ -1,6 +1,7 @@
 #include "Plane.h"
 #include "TextureManager.h"
 #include "Util.h"
+#include "SoundManager.h"
 
 Plane::Plane()
 {
@@ -57,11 +58,6 @@ void Plane::update()
 	{
 		getRigidBody()->acceleration = Util::normalize(getRigidBody()->velocity) * -ACCELERATION;
 	}
-
-	//if (Util::magnitude(getRigidBody()->acceleration) < ACCELERATION)
-	//{
-	//	getRigidBody()->acceleration = glm::vec2(0.0f, 0.0f);
-	//}
 
 	// Should always run this, or player will stop when no key input
 	getRigidBody()->velocity = getRigidBody()->velocity + getRigidBody()->acceleration;
@@ -127,7 +123,25 @@ std::string Plane::checkDistance(GameObject* pGameObject)
 	std::string hit = "HIT";
 	if (sqrt(x * x + y * y) <= 28)
 	{
+		SoundManager::Instance().playSound("yay", 0);
 		return hit;
 	}
 	else return std::to_string(sqrt(x * x + y * y));
+}
+
+bool Plane::checkCollision(GameObject* oObject)
+{
+	glm::vec2 pPosition = getTransform()->position;
+	glm::vec2 bPosition = oObject->getTransform()->position;
+	
+	float planeRadius = getWidth() / 2;
+	float bulletRadius = oObject->getWidth() / 2;
+	float radiusSum = planeRadius + bulletRadius;
+
+	float x = bPosition.x - pPosition.x;
+	float y = bPosition.y - pPosition.y;
+	float bpDistance = sqrt(x * x + y * y);
+
+	if (bpDistance <= radiusSum) return true;
+	else return false;
 }

@@ -66,27 +66,6 @@ void StartScene::start()
 	m_pInstructionsLabel->setParent(this);
 	addChild(m_pInstructionsLabel);
 
-	// Start Button
-	/*m_pStartButton = new Button();
-	m_pStartButton->getTransform()->position = glm::vec2(400.0f, 400.0f); */
-
-	//m_pStartButton->addEventListener(CLICK, [&]()-> void
-	//{
-	//	m_pStartButton->setActive(false);
-	//	TheGame::Instance()->changeSceneState(PLAY_SCENE);
-	//});
-	//
-	//m_pStartButton->addEventListener(MOUSE_OVER, [&]()->void
-	//{
-	//	m_pStartButton->setAlpha(128);
-	//});
-
-	//m_pStartButton->addEventListener(MOUSE_OUT, [&]()->void
-	//{
-	//	m_pStartButton->setAlpha(255);
-	//});
-	//addChild(m_pStartButton);
-
 	// Scene 1 button
 	m_pScene1 = new Button("../Assets/textures/scene1button.png","scene1button",SCENE1_BUTTON);
 	m_pScene1->getTransform()->position = glm::vec2(300.0f, 450.0f);

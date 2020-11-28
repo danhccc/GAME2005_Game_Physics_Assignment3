@@ -26,6 +26,8 @@ public:
 	bool isColliding(GameObject* pOther);
 	std::string checkDistance(GameObject* pGameObject);
 
+	bool checkCollision(GameObject* oObject);
+
 private:
 	void m_buildAnimations();
 	const float ACCELERATION = 10.0f;
